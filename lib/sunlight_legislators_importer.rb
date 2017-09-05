@@ -1,14 +1,17 @@
+require_relative '../app/models/legislator'
 require 'csv'
+require 'byebug'
 
 class SunlightLegislatorsImporter
-  def self.import(filename)
+  def self.import(filename=File.dirname(__FILE__) + "/../db/data/legislators.csv")
     csv = CSV.new(File.open(filename), :headers => true)
     csv.each do |row|
+      attribute_hash = {}
       row.each do |field, value|
-        # TODO: begin
-        raise NotImplementedError, "TODO: figure out what to do with this row and do it!"
-        # TODO: end
+        attribute_hash[field] = value
       end
+      attribute_hash["birthdate"] = Date.strptime(attribute_hash["birthdate"], '%m/%d/%Y')
+      legislator = Legislator.create!(attribute_hash)
     end
   end
 end
